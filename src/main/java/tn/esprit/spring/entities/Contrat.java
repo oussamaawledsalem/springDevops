@@ -15,12 +15,24 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Contrat implements Serializable {
-	
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+		private static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = 1L;
+
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -33,6 +45,8 @@ public class Contrat implements Serializable {
  
 	@JsonIgnore
 	@OneToOne(mappedBy="contrat")
+		private static final long serialVersionUID = 1L;
+
 	private Employe employe;
 
 	private float salaire;
