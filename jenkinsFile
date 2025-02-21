@@ -17,10 +17,11 @@ pipeline {
                 sh 'mvn clean compile'
             }
         }
-    }
-stage('MVN Sonarqube') {
+
+        stage('MVN Sonarqube') {
             steps {
                 sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=LionelOussamaRobert123@ -Dmaven.test.skip=true'
             }
         }
+    }
 }
