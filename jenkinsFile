@@ -5,16 +5,27 @@ pipeline {
         maven "M2_HOME"
     }
 
+    environment {
+        SONAR_TOKEN = 'ton_token_sonarqube'  // Remplace par ton token
+    }
+
     stages {
         stage('GIT') {
             steps {
-                git branch: 'main', url: 'https://github.com/oussamaawledsalem/springDevops.git'
+                git branch: 'oussasmaawledsalem', url: 'https://github.com/oussamaawledsalem/springDevops.git'
             }
         }
 
         stage('COMPILE') {
             steps {
                 sh 'mvn clean compile'
+            }
+        }
+
+        stage('MVN Sonarqube') {
+            steps {
+                sh 'mvn sonar:sonar -Dsonar.login=squ_b42913a32cb949d075cc80cb1f134d4f4d1942b2 -Dmaven.test.skip=true'
+
             }
         }
     }
