@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        SONAR_TOKEN = credentials('squ_f437521b61c2d6eebd2d892dc4ec694d1cdb644d')  // Reference Jenkins credentials securely
+        SONAR_TOKEN = credentials('sqa_04f4dcac3fac85dd255726985f3445fe3910508f')  // Reference Jenkins credentials securely
     }
 
     stages {
