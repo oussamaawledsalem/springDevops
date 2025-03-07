@@ -26,23 +26,20 @@ pipeline {
             }
         }
 
-        stage('Building image') {
+        stage('Building Image') {
             steps {
                 sh 'docker build -t oussamaawledsalem/timesheet-devops:1.0.0 .'
             }
         }
 
-       stage('Docker Login') {
-    steps {
-        withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'oussamaawledsalem', passwordVariable: 'dckr_pat_q09GjDc3kiLeM1IN8Pu1y4V6Siw')]) {
-                sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
-                sh 'docker push oussamaawledsalem/timesheet-devops:1.0.0'
+        stage('Docker Login & Push') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
+                    sh 'docker push oussamaawledsalem/timesheet-devops:1.0.0'
+                }
             }
-
-    }
-}
-
-
+        }
 
         stage('MVN Sonarqube') {
             steps {
