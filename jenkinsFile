@@ -1,5 +1,4 @@
 pipeline {
-
     agent any
 
     tools {
@@ -20,26 +19,29 @@ pipeline {
                 sh 'mvn clean compile'
             }
         }
-        stage('Building image') {
+
+        stage('Maven Clean Install') {
             steps {
-                sh 'docker build -t ezzdinbz/timesheet-devops:1.0.0 .'
+                sh 'mvn clean install'
             }
         }
 
-          stage('Deploy Image') {
-                    steps {
-                        sh 'docker build -t ezzdinbz/timesheet-devops:1.0.0 .'
-                    }
-                }
+        stage('Building image') {
+            steps {
+                sh 'docker build -t oussamaawledsalem/timesheet-devops:1.0.0 .'
+            }
+        }
 
+        stage('Deploy Image') {
+            steps {
+                sh 'docker build -t oussamaawledsalem/timesheet-devops:1.0.0 .'
+            }
+        }
 
-         stage('MVN Sonarqube') {
+        stage('MVN Sonarqube') {
             steps {
                 sh 'mvn sonar:sonar -Dsonar.token=squ_7af8e73dbed9867cd6208c11c6d5b0e6482c9be3 -Dmaven.test.skip=true'
             }
         }
-
-         
-        
     }
 }
