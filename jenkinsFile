@@ -57,5 +57,5 @@ stage('Upload to Nexus') {
                 }
             }
         }
-    }
+    
 }
