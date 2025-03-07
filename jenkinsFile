@@ -5,10 +5,7 @@ pipeline {
         maven "M2_HOME"
     }
 
-    environment {
-        SONAR_TOKEN = credentials('squ_7af8e73dbed9867cd6208c11c6d5b0e6482c9be3')  // Reference Jenkins credentials securely
-    }
-
+  
     stages {
         stage('GIT') {
             steps {
