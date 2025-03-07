@@ -34,6 +34,7 @@ pipeline {
 
         stage('Deploy Image') {
             steps {
+                sh 'docker login'
                 sh 'docker push oussamaawledsalem/timesheet-devops:1.0.0'
             }
         }
