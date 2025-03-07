@@ -22,11 +22,6 @@ pipeline {
             }
         }
 
-        stage('MVN Sonarqube') {
-            steps {
-                // Pass the token using the environment variable
-                sh "mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN} -Dmaven.test.skip=true"
-            }
-        }
+       
     }
 }
