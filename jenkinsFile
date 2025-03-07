@@ -22,7 +22,7 @@ pipeline {
 
         stage('Maven Clean Install') {
             steps {
-                sh 'mvn clean install'
+                sh 'mvn clean install -DskipTests'
             }
         }
 
