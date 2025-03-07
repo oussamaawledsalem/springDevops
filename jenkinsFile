@@ -5,7 +5,6 @@ pipeline {
         maven "M2_HOME"
     }
 
-  
     stages {
         stage('GIT') {
             steps {
@@ -19,6 +18,15 @@ pipeline {
             }
         }
 
-       
+        stage('SONARQUBE') {
+            steps {
+                script {
+                    // Perform SonarQube analysis
+                    withSonarQubeEnv('SonarQube') {
+                        sh 'mvn sonar:sonar -Dsonar.projectKey=springDevops -Dsonar.host.url=http://<sonarqube-server>:9000 -Dsonar.login=squ_7af8e73dbed9867cd6208c11c6d5b0e6482c9be3'
+                    }
+                }
+            }
+        }
     }
 }
