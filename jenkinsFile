@@ -47,22 +47,15 @@ pipeline {
             //}
         //}
 
-        stage('Upload to Nexus') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'nexus-credentials', passwordVariable: 'NEXUS_PASS', usernameVariable: 'NEXUS_USER')]) {
-                    sh '''
-                        mvn deploy:deploy-file -Dfile=target/your-project.jar \
-                        -DrepositoryId=nexus \
-                        -Durl=http://localhost:8081/repository/maven-releases/ \
-                        -DgroupId=com.yourcompany \
-                        -DartifactId=your-project \
-                        -Dversion=1.0.0 \
-                        -Dpackaging=jar \
-                        -Dnexus.user=${NEXUS_USER} \
-                        -Dnexus.pass=${NEXUS_PASS}
-                    '''
-                }
-            }
+       stage('Upload to Nexus') {
+    steps {
+        withCredentials([usernamePassword(credentialsId: 'nexus-credentials', passwordVariable: 'NEXUS_PASS', usernameVariable: 'NEXUS_USER')]) {
+            sh '''
+                mvn deploy -DaltDeploymentRepository=nexus::default::http://localhost:8081/repository/maven-releases/ -Dnexus.user=${NEXUS_USER} -Dnexus.pass=${NEXUS_PASS}
+            '''
         }
     }
+}
+
+}
 }
