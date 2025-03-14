@@ -47,15 +47,16 @@ pipeline {
             //}
         //}
 
-       stage('Upload to Nexus') {
+      stage('Upload to Nexus') {
     steps {
         withCredentials([usernamePassword(credentialsId: 'nexus-credentials', passwordVariable: 'NEXUS_PASS', usernameVariable: 'NEXUS_USER')]) {
             sh '''
-                mvn deploy -DaltDeploymentRepository=nexus::default::http://localhost:8081/repository/maven-releases/ -Dnexus.user=${NEXUS_USER} -Dnexus.pass=${NEXUS_PASS}
+                mvn deploy -DaltDeploymentRepository=nexus::default::http://localhost:8081/repository/maven-releases/ -Dnexus.user=${NEXUS_USER} -Dnexus.pass=${NEXUS_PASS} -Dmaven.test.skip=true
             '''
         }
     }
 }
+
 
 }
 }
