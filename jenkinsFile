@@ -26,37 +26,46 @@ pipeline {
             }
         }
 
-       // stage('Building Image') {
-       //     steps {
-        //        sh 'docker build -t oussamaawledsalem/timesheet-devops:1.0.0 .'  // Build Docker image
-         //   }
-       // }
+        // stage('Building Image') {
+        //     steps {
+        //         sh 'docker build -t oussamaawledsalem/timesheet-devops:1.0.0 .'  // Build Docker image
+        //     }
+        // }
 
-       // stage('Docker Login & Push') {
-         //   steps {
-           //     withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-             //       sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
-               //     sh 'docker push oussamaawledsalem/timesheet-devops:1.0.0'  // Push the image to Docker Hub
-               // }
-           // }
-       // }
+        // stage('Docker Login & Push') {
+        //     steps {
+        //         withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+        //             sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
+        //             sh 'docker push oussamaawledsalem/timesheet-devops:1.0.0'  // Push the image to Docker Hub
+        //         }
+        //     }
+        // }
 
-       // stage('MVN Sonarqube') {
-         //   steps {
-           //     sh 'mvn sonar:sonar -Dsonar.token=squ_7af8e73dbed9867cd6208c11c6d5b0e6482c9be3 -Dmaven.test.skip=true'  // Run SonarQube analysis
-            //}
-        //}
+        // stage('MVN Sonarqube') {
+        //     steps {
+        //         sh 'mvn sonar:sonar -Dsonar.token=squ_7af8e73dbed9867cd6208c11c6d5b0e6482c9be3 -Dmaven.test.skip=true'  // Run SonarQube analysis
+        //     }
+        // }
 
-      stage('Upload to Nexus') {
-    steps {
-        withCredentials([usernamePassword(credentialsId: 'nexus-credentials', passwordVariable: 'NEXUS_PASS', usernameVariable: 'NEXUS_USER')]) {
-            sh '''
-                mvn deploy -DaltDeploymentRepository=nexus::default::http://localhost:8081/repository/maven-releases/ -Dnexus.user=${NEXUS_USER} -Dnexus.pass=${NEXUS_PASS} -Dmaven.test.skip=true
-            '''
+        stage('Upload to Nexus') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'nexus-credentials', passwordVariable: 'NEXUS_PASS', usernameVariable: 'NEXUS_USER')]) {
+                    // Ensure you're specifying the correct file
+                    sh '''
+                        mvn deploy:deploy-file \
+                            -Dfile=target/timesheet-devops-1.0.jar \
+                            -DrepositoryId=nexus \
+                            -Durl=http://localhost:8081/repository/maven-releases/ \
+                            -DgroupId=tn.esprit.spring.services \
+                            -DartifactId=timesheet-devops \
+                            -Dversion=1.0 \
+                            -Dpackaging=jar \
+                            -Dnexus.user=${NEXUS_USER} \
+                            -Dnexus.pass=${NEXUS_PASS} \
+                            -Dmaven.test.skip=true
+                    '''
+                }
+            }
         }
     }
-}
-
-
-}
 }
