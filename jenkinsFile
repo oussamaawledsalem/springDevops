@@ -43,7 +43,15 @@ pipeline {
 
         stage('Docker Run') {
             steps {
-                sh 'docker rm oussamaawledsalem/timesheet-devops:1.0.0'
+                script {
+            // Stop and remove the container if it exists
+            sh '''
+                if [ "$(docker ps -aq -f name=springDevops)" ]; then
+                  docker stop springDevops || true
+                  docker rm springDevops || true
+                fi
+            '''
+        }
                 sh 'docker run -d --name springDevops -p 8085:8085 oussamaawledsalem/timesheet-devops:1.0.0'
             }
         }
