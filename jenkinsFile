@@ -56,17 +56,18 @@ pipeline {
             }
         }
 
- stage('SonarQube Analysis') {
+stage('SonarQube Analysis') {
     steps {
-        withSonarQubeEnv('MySonarQubeServer') { // Change this to match the name of your SonarQube server in Jenkins
-            sh '''
-                /opt/sonar-scanner/bin/sonar-scanner \
-                  -Dsonar.projectKey=timesheet-devops \
-                  -Dsonar.projectName="Timesheet DevOps" \
-                  -Dsonar.projectVersion=1.0 \
-                  -Dsonar.sources=src \
-                  -Dsonar.java.binaries=target/classes
-            '''
+        withSonarQubeEnv('scanner') {
+            withCredentials([string(credentialsId: 'scanner', variable: 'scanner')]) {
+                sh '''
+                    mvn sonar:sonar \
+                    -Dsonar.login=$SONAR_TOKEN \
+                    -Dsonar.projectKey=timesheet-devops \
+                    -Dsonar.sources=src \
+                    -Dsonar.java.binaries=target/classes
+                '''
+            }
         }
     }
 }
