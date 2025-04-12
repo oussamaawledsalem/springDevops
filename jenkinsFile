@@ -47,9 +47,14 @@ pipeline {
             }
         }
 
-        stage('MVN Sonarqube') {
+       stage('SonarQube Analysis') {
             steps {
-                sh 'mvn sonar:sonar -Dsonar.token=squ_7af8e73dbed9867cd6208c11c6d5b0e6482c9be3 -Dmaven.test.skip=true'
+                script {
+                    def scannerHome = tool 'scanner'
+                    withSonarQubeEnv {
+                        sh "${scannerHome}/bin/sonar-scanner"
+                    }
+                }
             }
         }
 
