@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     tools {
-        jdk 'JAVA_HOME'    // Define your JDK installation name
-        maven 'M2_HOME'    // Define your Maven installation name
+        jdk 'JAVA_HOME'
+        maven 'M2_HOME'
     }
 
     stages {
@@ -16,41 +16,56 @@ pipeline {
 
         stage('Compile Stage') {
             steps {
-                sh 'mvn clean compile'  // Compile the project
+                sh 'mvn clean compile'
             }
         }
 
         stage('Maven Clean Install') {
             steps {
-                sh 'mvn clean install -DskipTests'  // Install dependencies and build the project, skipping tests
+                sh 'mvn clean install -DskipTests'
             }
         }
 
-        // stage('Building Image') {
-        //     steps {
-        //         sh 'docker build -t oussamaawledsalem/timesheet-devops:1.0.0 .'  // Build Docker image
-        //     }
-        // }
+        stage('Building Image') {
+            steps {
+                sh 'docker build -t oussamaawledsalem/timesheet-devops:1.0.0 .'
+            }
+        }
 
-        // stage('Docker Login & Push') {
-        //     steps {
-        //         withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-        //             sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
-        //             sh 'docker push oussamaawledsalem/timesheet-devops:1.0.0'  // Push the image to Docker Hub
-        //         }
-        //     }
-        // }
+        stage('Docker Login & Push') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
+                    sh 'docker push oussamaawledsalem/timesheet-devops:1.0.0'
+                }
+            }
+        }
 
-        // stage('MVN Sonarqube') {
-        //     steps {
-        //         sh 'mvn sonar:sonar -Dsonar.token=squ_7af8e73dbed9867cd6208c11c6d5b0e6482c9be3 -Dmaven.test.skip=true'  // Run SonarQube analysis
-        //     }
-        // }
+        stage('Docker Run') {
+            steps {
+                sh 'docker run -d --name springDevops -p 8085:8085 oussamaawledsalem/timesheet-devops:1.0.0'
+            }
+        }
 
-       stage('MVN Nexus') {
+        stage('MVN Sonarqube') {
+            steps {
+                sh 'mvn sonar:sonar -Dsonar.token=squ_7af8e73dbed9867cd6208c11c6d5b0e6482c9be3 -Dmaven.test.skip=true'
+            }
+        }
+
+        stage('MVN Nexus') {
             steps {
                 sh 'mvn deploy -Dmaven.test.skip=true'
             }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Pipeline executed successfully!'
+        }
+        failure {
+            echo '❌ Pipeline failed!'
         }
     }
 }
