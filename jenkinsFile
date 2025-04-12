@@ -58,17 +58,19 @@ pipeline {
 
 stage('SonarQube Analysis') {
     steps {
-        withSonarQubeEnv('scanner') {
-            withCredentials([string(credentialsId: 'scanner', variable: 'scanner')]) {
+               withSonarQubeEnv('scanner') {
+            withCredentials([string(credentialsId: 'scanner', variable: 'TOKEN')]) {
                 sh '''
-                    mvn sonar:sonar \
-                    -Dsonar.login=$SONAR_TOKEN \
-                    -Dsonar.projectKey=timesheet-devops \
-                    -Dsonar.sources=src \
-                    -Dsonar.java.binaries=target/classes
+                mvn sonar:sonar \
+                -Dsonar.token=$TOKEN \
+                -Dsonar.projectKey=timesheet-devops \
+                -Dsonar.sources=src/main/java \
+                -Dsonar.tests=src/test/java \
+                -Dsonar.java.binaries=target/classes
                 '''
             }
         }
+
     }
 }
 
