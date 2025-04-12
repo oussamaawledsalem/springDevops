@@ -47,16 +47,20 @@ pipeline {
             }
         }
 
-       stage('SonarQube Analysis') {
-            steps {
-                script {
-                    def scannerHome = tool 'scanner'
-                    withSonarQubeEnv {
-                        sh "${scannerHome}/bin/sonar-scanner"
-                    }
-                }
-            }
-        }
+      stage('MVN Sonarqube') {
+    steps {
+        sh '''
+            sonar-scanner \
+              -Dsonar.projectKey=timesheet-devops \
+              -Dsonar.projectName="Timesheet DevOps" \
+              -Dsonar.projectVersion=1.0 \
+              -Dsonar.sources=src \
+              -Dsonar.java.binaries=target/classes \
+              -Dsonar.host.url=http://192.168.174.129:9000 \
+              -Dsonar.login=squ_7af8e73dbed9867cd6208c11c6d5b0e6482c9be3
+        '''
+    }
+}
 
         stage('MVN Nexus') {
             steps {
