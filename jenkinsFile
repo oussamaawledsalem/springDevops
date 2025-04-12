@@ -48,14 +48,11 @@ pipeline {
             }
         }
 
-      stage('MVN Sonarqube') {
-    tools {
-        sonar 'SonarScanner' // This name must match the name you set in Jenkins
-    }
+ stage('SonarQube Analysis') {
     steps {
-        withSonarQubeEnv('MySonarQubeServer') { // This name must match your SonarQube installation in Jenkins
+        withSonarQubeEnv('MySonarQubeServer') { // Change this to match the name of your SonarQube server in Jenkins
             sh '''
-                sonar-scanner \
+                /opt/sonar-scanner/bin/sonar-scanner \
                   -Dsonar.projectKey=timesheet-devops \
                   -Dsonar.projectName="Timesheet DevOps" \
                   -Dsonar.projectVersion=1.0 \
@@ -65,6 +62,7 @@ pipeline {
         }
     }
 }
+
 
 
         stage('MVN Nexus') {
